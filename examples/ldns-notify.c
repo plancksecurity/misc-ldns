@@ -152,6 +152,7 @@ notify_host(int s, struct addrinfo* res, uint8_t* wire, size_t wiresize,
 
 	if(verbose) {
 		ssize_t i;
+		(void)gettimeofday(&pkt->timestamp, NULL);
 		printf("# reply from %s:\n", addrstr);
 		ldns_pkt_print(stdout, pkt);
 		if (verbose > 1) {
@@ -323,6 +324,7 @@ main(int argc, char **argv)
 
 	if(verbose) {
 		printf("# Sending packet:\n");
+		(void)gettimeofday(&notify->timestamp, NULL);
 		ldns_pkt_print(stdout, notify);
 
 	}

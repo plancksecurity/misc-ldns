@@ -1,5 +1,7 @@
 1.7.1	????-??-??
 	* ldns-notify can use all supported hash algorithms with -y.
+	* ldns-notify can do IPv6.
+	* ldns-notify now prints current time instead of epoch.
 	* bugfix #1209: make install ldns.pc file
 	  Thanks Oleksandr Natalenko
 	* bugfix #1218: Only chase DS if signer is parent of owner.
