@@ -344,12 +344,11 @@ main(int argc, char **argv)
 	{
 		struct addrinfo hints, *res0, *ai_res;
 		int error;
-		int default_family = AF_INET;
 
 		if(verbose)
 			printf("# sending to %s\n", argv[i]);
 		memset(&hints, 0, sizeof(hints));
-		hints.ai_family = default_family;
+		hints.ai_family = AF_UNSPEC;
 		hints.ai_socktype = SOCK_DGRAM;
 		hints.ai_protocol = IPPROTO_UDP;
 		error = getaddrinfo(argv[i], port, &hints, &res0);
