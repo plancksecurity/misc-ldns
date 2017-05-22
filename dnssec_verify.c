@@ -5,6 +5,9 @@
 #include <strings.h>
 #include <time.h>
 
+#ifdef HAVE_NETTLE
+#include <nettle/eddsa.h>
+#endif
 #ifdef HAVE_SSL
 /* this entire file is rather useless when you don't have
  * crypto...
@@ -1858,6 +1861,22 @@ ldns_verify_rrsig_gost_raw(const unsigned char* sig, size_t siglen,
 #endif
 
 #ifdef USE_ED25519
+# ifdef HAVE_NETTLE
+static ldns_status
+ldns_verify_rrsig_ed25519_raw(unsigned char* sig, size_t siglen,
+	ldns_buffer* rrset, unsigned char* key, size_t keylen)
+{
+	if (siglen != ED25519_SIGNATURE_SIZE || keylen != ED25519_KEY_SIZE)
+		return LDNS_STATUS_CRYPTO_BOGUS;
+
+	if (ed25519_sha512_verify(key, ldns_buffer_position(rrset),
+				ldns_buffer_begin(rrset), sig))
+		return LDNS_STATUS_OK;
+	else
+		return LDNS_STATUS_CRYPTO_BOGUS;
+}
+
+# else
 EVP_PKEY*
 ldns_ed255192pkey_raw(const unsigned char* key, size_t keylen)
 {
@@ -1902,6 +1921,7 @@ ldns_verify_rrsig_ed25519_raw(unsigned char* sig, size_t siglen,
 	EVP_PKEY_free(evp_key);
 	return result;
 }
+# endif /* HAVE_NETTLE */
 #endif /* USE_ED25519 */
 
 #ifdef USE_ED448
@@ -2239,10 +2259,16 @@ ldns_rrsig2rawsig_buffer(ldns_buffer* rawsig_buf, const ldns_rr* rrsig)
 		if (ldns_rr_rdf(rrsig, 8) == NULL) {
 			return LDNS_STATUS_MISSING_RDATA_FIELDS_RRSIG;
 		}
+# ifdef HAVE_NETTLE
+		ldns_buffer_write(rawsig_buf,
+				ldns_rdf_data(ldns_rr_rdf(rrsig, 8)),
+				ldns_rdf_size(ldns_rr_rdf(rrsig, 8)));
+# else
 		if (ldns_convert_ed25519_rrsig_rdf2asn1(
 			rawsig_buf, ldns_rr_rdf(rrsig, 8)) != LDNS_STATUS_OK) {
 			return LDNS_STATUS_MEM_ERR;
                 }
+# endif
 		break;
 #endif
 #ifdef USE_ED448

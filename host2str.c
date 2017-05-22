@@ -34,6 +34,9 @@
 #ifndef INET6_ADDRSTRLEN
 #define INET6_ADDRSTRLEN 46
 #endif
+#ifdef HAVE_NETTLE
+#include <nettle/eddsa.h>
+#endif
 
 /* lookup tables for standard DNS stuff  */
 
@@ -1964,6 +1967,9 @@ ldns_key2buffer_str(ldns_buffer *output, const ldns_key *k)
 {
 	ldns_status status = LDNS_STATUS_OK;
 	unsigned char  *bignum;
+# if defined(USE_ED25519) && defined(HAVE_NETTLE)
+	char b64_str[45];
+# endif
 #ifdef HAVE_SSL
 	RSA *rsa;
 	DSA *dsa;
@@ -2160,6 +2166,13 @@ ldns_key2buffer_str(ldns_buffer *output, const ldns_key *k)
 				ldns_buffer_printf(output, "Algorithm: %d (", ldns_key_algorithm(k));
                                 status=ldns_algorithm2buffer_str(output, (ldns_algorithm)ldns_key_algorithm(k));
 				ldns_buffer_printf(output, ")\n");
+# ifdef HAVE_NETTLE
+				if (ldns_b64_ntop(ldns_key_external_key(k),
+							ED25519_KEY_SIZE,
+							b64_str, 45)) {
+					ldns_buffer_printf(output, "PrivateKey: %s\n", b64_str);
+				}
+# else
 				if(k->_key.key) {
                                         EC_KEY* ec = EVP_PKEY_get1_EC_KEY(k->_key.key);
                                         const BIGNUM* b = EC_KEY_get0_private_key(ec);
@@ -2169,6 +2182,7 @@ ldns_key2buffer_str(ldns_buffer *output, const ldns_key *k)
                                          * its still assigned to the PKEY */
                                         EC_KEY_free(ec);
 				}
+# endif
 				ldns_buffer_printf(output, "\n");
 				break;
 #endif /* USE_ED25519 */

@@ -324,6 +324,26 @@ tmp_CPPFLAGS=$CPPFLAGS
 tmp_LDFLAGS=$LDFLAGS
 tmp_LIBS=$LIBS
 
+# libnettle
+USE_NETTLE="no"
+AC_ARG_WITH([nettle], AC_HELP_STRING([--with-nettle=path],
+	[use libnettle as crypto library, installed at path.]),
+	[
+	USE_NETTLE="yes"
+	AC_DEFINE(HAVE_NETTLE, 1, [Use libnettle for crypto])
+	AC_CHECK_HEADERS([nettle/dsa-compat.h],,, [AC_INCLUDES_DEFAULT])
+	if test "$withval" != "" -a "$withval" != "yes"; then
+		CPPFLAGS="$CPPFLAGS -I$withval/include/nettle"
+		LDFLAGS="$LDFLAGS -L$withval/lib"
+		ACX_RUNTIME_PATH_ADD([$withval/lib])
+	else
+		CPPFLAGS="$CPPFLAGS -I/usr/include/nettle"
+	fi
+	LIBS="$LIBS -lhogweed -lnettle -lgmp"
+	LIBSSL_LIBS="$LIBSSL_LIBS -lhogweed -lnettle -lgmp"
+	]
+)
+
 ACX_WITH_SSL_OPTIONAL
 AC_MSG_CHECKING([for LibreSSL])
 if grep VERSION_TEXT $ssldir/include/openssl/opensslv.h | grep "LibreSSL" >/dev/null; then
@@ -516,12 +536,10 @@ esac
 AC_ARG_ENABLE(ed25519, AC_HELP_STRING([--enable-ed25519], [Enable ED25519 support (experimental)]))
 case "$enable_ed25519" in
     yes)
-      if test "x$HAVE_SSL" != "xyes"; then
-        AC_MSG_ERROR([ED25519 enabled, but no SSL support])
+      if test "x$USE_NETTLE" != "xyes"; then
+        AC_MSG_ERROR([libnettle is needed for ED25519])
       fi
-      AC_CHECK_DECLS([NID_X25519], [], [AC_MSG_ERROR([OpenSSL does not support the EDDSA curve: please upgrade OpenSSL or rerun with --disable-ed25519])], [AC_INCLUDES_DEFAULT
-#include <openssl/evp.h>
-      ])
+      AC_CHECK_FUNCS([nettle_ed25519_sha512_public_key nettle_ed25519_sha512_sign nettle_ed25519_sha512_verify], [], [AC_MSG_ERROR([libnettle does not support the EDDSA curve: please upgrade OpenSSL or rerun with --disable-ed25519i])])
       AC_DEFINE_UNQUOTED([USE_ED25519], [1], [Define this to enable ED25519 support.])
       ;;
     *|no) dnl default

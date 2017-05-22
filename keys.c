@@ -19,6 +19,9 @@
 #include <openssl/engine.h>
 #include <openssl/rand.h>
 #endif /* HAVE_SSL */
+#ifdef HAVE_NETTLE
+#include <nettle/eddsa.h>
+#endif
 
 ldns_lookup_table ldns_signing_algorithms[] = {
         { LDNS_SIGN_RSAMD5, "RSAMD5" },
@@ -299,6 +302,29 @@ ldns_key_new_frm_fp_ecdsa_l(FILE* fp, ldns_algorithm alg, int* line_nr)
 #endif
 
 #ifdef USE_ED25519
+# ifdef HAVE_NETTLE
+/** read ED25519 private key */
+static void *
+ldns_key_new_frm_fp_ed25519_l(FILE* fp, int* line_nr)
+{
+	char token[16384];
+	unsigned char privkey[ED25519_KEY_SIZE + 1], *key;
+	int r;
+
+	if (ldns_fget_keyword_data_l(fp, "PrivateKey", ": ", token, "\n",
+		sizeof(token), line_nr) == -1)
+		return NULL;
+	r = ldns_b64_pton(token, privkey, sizeof(privkey));
+	if (r != ED25519_KEY_SIZE) {
+		return NULL;
+	}
+	if (!(key = LDNS_XMALLOC(unsigned char, ED25519_KEY_SIZE)))
+		return NULL;
+	(void)memcpy(key, privkey, ED25519_KEY_SIZE);
+	return key;
+}
+    
+# else
 /** turn private key buffer into EC_KEY structure */
 static EC_KEY*
 ldns_ed25519_priv_raw(uint8_t* pkey, int plen)
@@ -372,6 +398,7 @@ ldns_key_new_frm_fp_ed25519_l(FILE* fp, int* line_nr)
 	}
         return evp_key;
 }
+# endif
 #endif
 
 #ifdef USE_ED448
@@ -724,14 +751,19 @@ ldns_key_new_frm_fp_l(ldns_key **key, FILE *fp, int *line_nr)
 #ifdef USE_ED25519
 		case LDNS_SIGN_ED25519:
                         ldns_key_set_algorithm(k, alg);
+# ifdef HAVE_NETTLE
+                        ldns_key_set_external_key(k,
+                                ldns_key_new_frm_fp_ed25519_l(fp, line_nr));
+# else
                         ldns_key_set_evp_key(k,
                                 ldns_key_new_frm_fp_ed25519_l(fp, line_nr));
-#ifndef S_SPLINT_S
+#  ifndef S_SPLINT_S
 			if(!k->_key.key) {
 				ldns_key_free(k);
 				return LDNS_STATUS_ERR;
 			}
-#endif /* splint */
+#  endif /* splint */
+# endif
 			break;
 #endif
 #ifdef USE_ED448
@@ -1141,6 +1173,9 @@ ldns_key_new_frm_algorithm(ldns_signing_algorithm alg, uint16_t size)
 	uint16_t offset = 0;
 #endif
 	unsigned char *hmac;
+#ifdef HAVE_NETTLE
+	unsigned char *ext_key;
+#endif
 
 	k = ldns_key_new();
 	if (!k) {
@@ -1313,7 +1348,34 @@ ldns_key_new_frm_algorithm(ldns_signing_algorithm alg, uint16_t size)
 			break;
 #ifdef USE_ED25519
 		case LDNS_SIGN_ED25519:
-#ifdef HAVE_EVP_PKEY_KEYGEN
+# ifdef HAVE_NETTLE
+			k->_key.key = NULL;
+			ext_key = LDNS_XMALLOC(unsigned char,ED25519_KEY_SIZE);
+                        if(!ext_key) {
+				ldns_key_free(k);
+				return NULL;
+                        }
+#  ifdef HAVE_SSL
+			if (RAND_bytes(ext_key, ED25519_KEY_SIZE) != 1) {
+				LDNS_FREE(ext_key);
+				ldns_key_free(k);
+				return NULL;
+			}
+#  else
+			while (offset + sizeof(i) < ED25519_KEY_SIZE) {
+			  i = random();
+			  memcpy(&ext_key[offset], &i, sizeof(i));
+			  offset += sizeof(i);
+			}
+			if (offset < size) {
+			  i = random();
+			  memcpy(&ext_key[offset], &i, ED25519_KEY_SIZE - offset);
+			}
+#  endif /* HAVE_SSL */
+			ldns_key_set_external_key(k, ext_key);
+
+# else /* HAVE_NETTLE */
+#  ifdef HAVE_EVP_PKEY_KEYGEN
 			ctx = EVP_PKEY_CTX_new_id(EVP_PKEY_EC, NULL);
 			if(!ctx) {
 				ldns_key_free(k);
@@ -1336,7 +1398,8 @@ ldns_key_new_frm_algorithm(ldns_signing_algorithm alg, uint16_t size)
 				return NULL;
 			}
 			EVP_PKEY_CTX_free(ctx);
-#endif
+#  endif /* HAVE_EVP_PKEY_KEYGEN */
+# endif /* USE_NETTLE */
 			break;
 #endif /* ED25519 */
 #ifdef USE_ED448
@@ -1999,6 +2062,16 @@ ldns_key2rr(const ldns_key *k)
                 case LDNS_SIGN_ED25519:
 			ldns_rr_push_rdf(pubkey, ldns_native2rdf_int8(
 				LDNS_RDF_TYPE_ALG, ldns_key_algorithm(k)));
+# ifdef HAVE_NETTLE
+			bin = LDNS_XMALLOC(unsigned char, ED25519_KEY_SIZE);
+			size = ED25519_KEY_SIZE;
+			if (!bin) {
+				ldns_rr_free(pubkey);
+				return NULL;
+			}
+			ed25519_sha512_public_key(bin, ldns_key_external_key(k));
+# else
+
                         bin = NULL;
                         ec = EVP_PKEY_get1_EC_KEY(k->_key.key);
                         EC_KEY_set_conv_form(ec, POINT_CONVERSION_UNCOMPRESSED);
@@ -2011,6 +2084,7 @@ ldns_key2rr(const ldns_key *k)
                         /* down the reference count for ec, its still assigned
                          * to the pkey */
                         EC_KEY_free(ec);
+# endif
 			internal_data = 1;
 			break;
 #endif
