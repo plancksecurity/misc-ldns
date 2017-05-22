@@ -22,6 +22,9 @@
 #ifdef HAVE_NETTLE
 #include <nettle/eddsa.h>
 #endif
+#ifdef HAVE_DECAF
+#include <decaf/ed255.h>
+#endif
 
 ldns_lookup_table ldns_signing_algorithms[] = {
         { LDNS_SIGN_RSAMD5, "RSAMD5" },
@@ -302,28 +305,32 @@ ldns_key_new_frm_fp_ecdsa_l(FILE* fp, ldns_algorithm alg, int* line_nr)
 #endif
 
 #ifdef USE_ED25519
-# ifdef HAVE_NETTLE
+# if defined(HAVE_NETTLE) || defined(HAVE_DECAF)
 /** read ED25519 private key */
+#  ifdef HAVE_NETTLE
+#   define ED25519_PRIV_KEY_SIZE ED25519_KEY_SIZE
+#  else
+#   define ED25519_PRIV_KEY_SIZE DECAF_EDDSA_25519_PRIVATE_BYTES
+#  endif
 static void *
 ldns_key_new_frm_fp_ed25519_l(FILE* fp, int* line_nr)
 {
 	char token[16384];
-	unsigned char privkey[ED25519_KEY_SIZE + 1], *key;
+	unsigned char privkey[ED25519_PRIV_KEY_SIZE + 1], *key;
 	int r;
 
 	if (ldns_fget_keyword_data_l(fp, "PrivateKey", ": ", token, "\n",
 		sizeof(token), line_nr) == -1)
 		return NULL;
 	r = ldns_b64_pton(token, privkey, sizeof(privkey));
-	if (r != ED25519_KEY_SIZE) {
+	if (r != ED25519_PRIV_KEY_SIZE) {
 		return NULL;
 	}
-	if (!(key = LDNS_XMALLOC(unsigned char, ED25519_KEY_SIZE)))
+	if (!(key = LDNS_XMALLOC(unsigned char, ED25519_PRIV_KEY_SIZE)))
 		return NULL;
-	(void)memcpy(key, privkey, ED25519_KEY_SIZE);
+	(void)memcpy(key, privkey, ED25519_PRIV_KEY_SIZE);
 	return key;
 }
-    
 # else
 /** turn private key buffer into EC_KEY structure */
 static EC_KEY*
@@ -751,7 +758,7 @@ ldns_key_new_frm_fp_l(ldns_key **key, FILE *fp, int *line_nr)
 #ifdef USE_ED25519
 		case LDNS_SIGN_ED25519:
                         ldns_key_set_algorithm(k, alg);
-# ifdef HAVE_NETTLE
+# if defined(HAVE_NETTLE) || defined(HAVE_DECAF)
                         ldns_key_set_external_key(k,
                                 ldns_key_new_frm_fp_ed25519_l(fp, line_nr));
 # else
@@ -1173,7 +1180,7 @@ ldns_key_new_frm_algorithm(ldns_signing_algorithm alg, uint16_t size)
 	uint16_t offset = 0;
 #endif
 	unsigned char *hmac;
-#ifdef HAVE_NETTLE
+#if defined(HAVE_NETTLE) || defined(HAVE_DECAF)
 	unsigned char *ext_key;
 #endif
 
@@ -1348,28 +1355,29 @@ ldns_key_new_frm_algorithm(ldns_signing_algorithm alg, uint16_t size)
 			break;
 #ifdef USE_ED25519
 		case LDNS_SIGN_ED25519:
-# ifdef HAVE_NETTLE
+# if defined(HAVE_NETTLE) || defined(HAVE_DECAF)
 			k->_key.key = NULL;
-			ext_key = LDNS_XMALLOC(unsigned char,ED25519_KEY_SIZE);
+			ext_key = LDNS_XMALLOC(unsigned char,
+					ED25519_PRIV_KEY_SIZE);
                         if(!ext_key) {
 				ldns_key_free(k);
 				return NULL;
                         }
 #  ifdef HAVE_SSL
-			if (RAND_bytes(ext_key, ED25519_KEY_SIZE) != 1) {
+			if (RAND_bytes(ext_key, ED25519_PRIV_KEY_SIZE) != 1) {
 				LDNS_FREE(ext_key);
 				ldns_key_free(k);
 				return NULL;
 			}
 #  else
-			while (offset + sizeof(i) < ED25519_KEY_SIZE) {
+			while (offset + sizeof(i) < ED25519_PRIV_KEY_SIZE) {
 			  i = random();
 			  memcpy(&ext_key[offset], &i, sizeof(i));
 			  offset += sizeof(i);
 			}
 			if (offset < size) {
 			  i = random();
-			  memcpy(&ext_key[offset], &i, ED25519_KEY_SIZE - offset);
+			  memcpy(&ext_key[offset], &i, ED25519_PRIV_KEY_SIZE - offset);
 			}
 #  endif /* HAVE_SSL */
 			ldns_key_set_external_key(k, ext_key);
@@ -1399,7 +1407,7 @@ ldns_key_new_frm_algorithm(ldns_signing_algorithm alg, uint16_t size)
 			}
 			EVP_PKEY_CTX_free(ctx);
 #  endif /* HAVE_EVP_PKEY_KEYGEN */
-# endif /* USE_NETTLE */
+# endif /* HAVE_NETTLE */
 			break;
 #endif /* ED25519 */
 #ifdef USE_ED448
@@ -2062,14 +2070,19 @@ ldns_key2rr(const ldns_key *k)
                 case LDNS_SIGN_ED25519:
 			ldns_rr_push_rdf(pubkey, ldns_native2rdf_int8(
 				LDNS_RDF_TYPE_ALG, ldns_key_algorithm(k)));
-# ifdef HAVE_NETTLE
-			bin = LDNS_XMALLOC(unsigned char, ED25519_KEY_SIZE);
-			size = ED25519_KEY_SIZE;
+# if defined(HAVE_NETTLE) || defined(HAVE_DECAF)
+			bin = LDNS_XMALLOC(unsigned char,
+					ED25519_PRIV_KEY_SIZE);
+			size = ED25519_PRIV_KEY_SIZE;
 			if (!bin) {
 				ldns_rr_free(pubkey);
 				return NULL;
 			}
+#  ifdef HAVE_NETTLE
 			ed25519_sha512_public_key(bin, ldns_key_external_key(k));
+#  else
+			decaf_ed25519_derive_public_key(bin, ldns_key_external_key(k));
+#  endif
 # else
 
                         bin = NULL;

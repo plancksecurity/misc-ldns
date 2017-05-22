@@ -11,6 +11,10 @@
 #ifdef HAVE_NETTLE
 #include <nettle/eddsa.h>
 #endif
+#ifdef HAVE_DECAF
+#include <decaf/ed255.h>
+#endif
+
 #ifdef HAVE_SSL
 /* this entire file is rather useless when you don't have
  * crypto...
@@ -123,9 +127,14 @@ ldns_rdf *
 ldns_sign_public_buffer(ldns_buffer *sign_buf, ldns_key *current_key)
 {
 	ldns_rdf *b64rdf = NULL;
-#if defined(USE_ED25519) && defined(HAVE_NETTLE)
+#ifdef USE_ED25519
+# if defined(HAVE_NETTLE)
 	uint8_t ed25519_pub[ED25519_KEY_SIZE];
 	uint8_t ed25519_sig[ED25519_SIGNATURE_SIZE];
+# elif defined(HAVE_DECAF)
+	uint8_t ed25519_pub[DECAF_EDDSA_25519_PUBLIC_BYTES];
+	uint8_t ed25519_sig[DECAF_EDDSA_25519_SIGNATURE_BYTES];
+# endif
 #endif
 
 	switch(ldns_key_algorithm(current_key)) {
@@ -188,7 +197,7 @@ ldns_sign_public_buffer(ldns_buffer *sign_buf, ldns_key *current_key)
 #endif
 #ifdef USE_ED25519
         case LDNS_SIGN_ED25519:
-# ifdef HAVE_NETTLE
+# if defined(HAVE_NETTLE)
 		ed25519_sha512_public_key(ed25519_pub,
 				ldns_key_external_key(current_key));
 		ed25519_sha512_sign(ed25519_pub,
@@ -197,6 +206,18 @@ ldns_sign_public_buffer(ldns_buffer *sign_buf, ldns_key *current_key)
 				ldns_buffer_begin(sign_buf), ed25519_sig);
 		b64rdf = ldns_rdf_new_frm_data(LDNS_RDF_TYPE_B64,
 				ED25519_SIGNATURE_SIZE, ed25519_sig);
+# elif defined(HAVE_DECAF)
+		decaf_ed25519_derive_public_key(ed25519_pub,
+				ldns_key_external_key(current_key));
+		decaf_ed25519_sign(ed25519_sig,
+				ldns_key_external_key(current_key),
+				ed25519_pub,
+				ldns_buffer_begin(sign_buf),
+				ldns_buffer_position(sign_buf),
+				0, DECAF_ED25519_NO_CONTEXT, 0);
+		b64rdf = ldns_rdf_new_frm_data(LDNS_RDF_TYPE_B64,
+				DECAF_EDDSA_25519_SIGNATURE_BYTES,
+				ed25519_sig);
 # else	
 		b64rdf = ldns_sign_public_evp(
 				   sign_buf,
@@ -545,7 +566,7 @@ ldns_sign_public_evp(ldns_buffer *to_sign,
 				b64sig, (long)siglen, ldns_pkey_is_ecdsa(key));
 		}
 #  endif /* USE_ECDSA */
-#  if defined(USE_ED25519) && !defined(HAVE_NETTLE)
+#  if defined(USE_ED25519) && !defined(HAVE_NETTLE) && !defined(HAVE_DECAF)
 		if(EVP_PKEY_id(key) == NID_X25519) {
 			r = 1;
 			sigdata_rdf = ldns_convert_ed25519_rrsig_asn12rdf(

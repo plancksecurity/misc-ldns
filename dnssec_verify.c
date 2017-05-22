@@ -8,6 +8,9 @@
 #ifdef HAVE_NETTLE
 #include <nettle/eddsa.h>
 #endif
+#ifdef HAVE_DECAF
+#include <decaf/ed255.h>
+#endif
 #ifdef HAVE_SSL
 /* this entire file is rather useless when you don't have
  * crypto...
@@ -1861,7 +1864,7 @@ ldns_verify_rrsig_gost_raw(const unsigned char* sig, size_t siglen,
 #endif
 
 #ifdef USE_ED25519
-# ifdef HAVE_NETTLE
+# if defined(HAVE_NETTLE)
 static ldns_status
 ldns_verify_rrsig_ed25519_raw(unsigned char* sig, size_t siglen,
 	ldns_buffer* rrset, unsigned char* key, size_t keylen)
@@ -1875,7 +1878,22 @@ ldns_verify_rrsig_ed25519_raw(unsigned char* sig, size_t siglen,
 	else
 		return LDNS_STATUS_CRYPTO_BOGUS;
 }
+# elif defined(HAVE_DECAF)
+static ldns_status
+ldns_verify_rrsig_ed25519_raw(unsigned char* sig, size_t siglen,
+	ldns_buffer* rrset, unsigned char* key, size_t keylen)
+{
+	if (siglen != DECAF_EDDSA_25519_SIGNATURE_BYTES ||
+	    keylen != DECAF_EDDSA_25519_PUBLIC_BYTES)
+		return LDNS_STATUS_CRYPTO_BOGUS;
 
+	if (decaf_ed25519_verify(sig, key, ldns_buffer_begin(rrset),
+				ldns_buffer_position(rrset), 0,
+				DECAF_ED25519_NO_CONTEXT, 0))
+		return LDNS_STATUS_OK;
+	else
+		return LDNS_STATUS_CRYPTO_BOGUS;
+}
 # else
 EVP_PKEY*
 ldns_ed255192pkey_raw(const unsigned char* key, size_t keylen)
@@ -2259,7 +2277,7 @@ ldns_rrsig2rawsig_buffer(ldns_buffer* rawsig_buf, const ldns_rr* rrsig)
 		if (ldns_rr_rdf(rrsig, 8) == NULL) {
 			return LDNS_STATUS_MISSING_RDATA_FIELDS_RRSIG;
 		}
-# ifdef HAVE_NETTLE
+# if defined(HAVE_NETTLE) || defined(HAVE_DECAF)
 		ldns_buffer_write(rawsig_buf,
 				ldns_rdf_data(ldns_rr_rdf(rrsig, 8)),
 				ldns_rdf_size(ldns_rr_rdf(rrsig, 8)));

@@ -1,5 +1,3 @@
-#                                               -*- Autoconf -*-
-# Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.56)
 sinclude(acx_nlnetlabs.m4)
 
@@ -344,6 +342,27 @@ AC_ARG_WITH([nettle], AC_HELP_STRING([--with-nettle=path],
 	]
 )
 
+# libnettle
+USE_DECAF="no"
+AC_ARG_WITH([decaf], AC_HELP_STRING([--with-decaf=path],
+	[use libdecaf as crypto library, installed at path.]),
+	[
+	USE_DECAF="yes"
+	AC_DEFINE(HAVE_DECAF, 1, [Use libdecaf for crypto])
+	AC_CHECK_HEADERS([decaf/ed255.h],,, [AC_INCLUDES_DEFAULT])
+	if test "$withval" != "" -a "$withval" != "yes"; then
+		CPPFLAGS="$CPPFLAGS -I$withval/include/decaf"
+		LDFLAGS="$LDFLAGS -L$withval/lib"
+		ACX_RUNTIME_PATH_ADD([$withval/lib])
+	else
+		CPPFLAGS="$CPPFLAGS -I/usr/include/decaf"
+	fi
+	LIBS="$LIBS -ldecaf"
+	LIBSSL_LIBS="$LIBSSL_LIBS -ldecaf"
+	]
+)
+
+
 ACX_WITH_SSL_OPTIONAL
 AC_MSG_CHECKING([for LibreSSL])
 if grep VERSION_TEXT $ssldir/include/openssl/opensslv.h | grep "LibreSSL" >/dev/null; then
@@ -537,9 +556,14 @@ AC_ARG_ENABLE(ed25519, AC_HELP_STRING([--enable-ed25519], [Enable ED25519 suppor
 case "$enable_ed25519" in
     yes)
       if test "x$USE_NETTLE" != "xyes"; then
-        AC_MSG_ERROR([libnettle is needed for ED25519])
+        if test "x$USE_DECAF" != "xyes"; then
+          AC_MSG_ERROR([libnettle or libdecaf is needed for ED25519])
+        else
+          AC_CHECK_FUNCS([decaf_ed25519_derive_public_key decaf_ed25519_sign decaf_ed25519_verify], [], [AC_MSG_ERROR([libdecaf does not support the EDDSA curve: please upgrade libdecaf or rerun with --disable-ed25519])])
+        fi
+      else
+        AC_CHECK_FUNCS([nettle_ed25519_sha512_public_key nettle_ed25519_sha512_sign nettle_ed25519_sha512_verify], [], [AC_MSG_ERROR([libnettle does not support the EDDSA curve: please upgrade libnettle or rerun with --disable-ed25519])])
       fi
-      AC_CHECK_FUNCS([nettle_ed25519_sha512_public_key nettle_ed25519_sha512_sign nettle_ed25519_sha512_verify], [], [AC_MSG_ERROR([libnettle does not support the EDDSA curve: please upgrade OpenSSL or rerun with --disable-ed25519i])])
       AC_DEFINE_UNQUOTED([USE_ED25519], [1], [Define this to enable ED25519 support.])
       ;;
     *|no) dnl default

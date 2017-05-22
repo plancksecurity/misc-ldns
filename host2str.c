@@ -37,6 +37,14 @@
 #ifdef HAVE_NETTLE
 #include <nettle/eddsa.h>
 #endif
+#ifdef HAVE_DECAF
+#include <decaf/ed255.h>
+#endif
+#if defined(HAVE_NETTLE)
+# define ED25519_PRIV_KEY_SIZE ED25519_KEY_SIZE
+#elif defined(HAVE_DECAF)
+# define ED25519_PRIV_KEY_SIZE DECAF_EDDSA_25519_PRIVATE_BYTES 
+#endif
 
 /* lookup tables for standard DNS stuff  */
 
@@ -1967,7 +1975,7 @@ ldns_key2buffer_str(ldns_buffer *output, const ldns_key *k)
 {
 	ldns_status status = LDNS_STATUS_OK;
 	unsigned char  *bignum;
-# if defined(USE_ED25519) && defined(HAVE_NETTLE)
+# if defined(USE_ED25519) && (defined(HAVE_NETTLE) || defined(HAVE_DECAF))
 	char b64_str[45];
 # endif
 #ifdef HAVE_SSL
@@ -2166,9 +2174,9 @@ ldns_key2buffer_str(ldns_buffer *output, const ldns_key *k)
 				ldns_buffer_printf(output, "Algorithm: %d (", ldns_key_algorithm(k));
                                 status=ldns_algorithm2buffer_str(output, (ldns_algorithm)ldns_key_algorithm(k));
 				ldns_buffer_printf(output, ")\n");
-# ifdef HAVE_NETTLE
+# if defined(HAVE_NETTLE) || defined(HAVE_DECAF)
 				if (ldns_b64_ntop(ldns_key_external_key(k),
-							ED25519_KEY_SIZE,
+							ED25519_PRIV_KEY_SIZE,
 							b64_str, 45)) {
 					ldns_buffer_printf(output, "PrivateKey: %s\n", b64_str);
 				}
