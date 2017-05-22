@@ -39,6 +39,7 @@
 #endif
 #ifdef HAVE_DECAF
 #include <decaf/ed255.h>
+#include <decaf/ed448.h>
 #endif
 #if defined(HAVE_NETTLE)
 # define ED25519_PRIV_KEY_SIZE ED25519_KEY_SIZE
@@ -1978,6 +1979,9 @@ ldns_key2buffer_str(ldns_buffer *output, const ldns_key *k)
 # if defined(USE_ED25519) && (defined(HAVE_NETTLE) || defined(HAVE_DECAF))
 	char b64_str[45];
 # endif
+# if defined(USE_ED448) && defined(HAVE_DECAF)
+	char b64_str2[77];
+# endif
 #ifdef HAVE_SSL
 	RSA *rsa;
 	DSA *dsa;
@@ -2177,7 +2181,7 @@ ldns_key2buffer_str(ldns_buffer *output, const ldns_key *k)
 # if defined(HAVE_NETTLE) || defined(HAVE_DECAF)
 				if (ldns_b64_ntop(ldns_key_external_key(k),
 							ED25519_PRIV_KEY_SIZE,
-							b64_str, 45)) {
+							b64_str, sizeof(b64_str))) {
 					ldns_buffer_printf(output, "PrivateKey: %s\n", b64_str);
 				}
 # else
@@ -2200,6 +2204,13 @@ ldns_key2buffer_str(ldns_buffer *output, const ldns_key *k)
 				ldns_buffer_printf(output, "Algorithm: %d (", ldns_key_algorithm(k));
                                 status=ldns_algorithm2buffer_str(output, (ldns_algorithm)ldns_key_algorithm(k));
 				ldns_buffer_printf(output, ")\n");
+# if defined(HAVE_DECAF)
+				if (ldns_b64_ntop(ldns_key_external_key(k),
+							DECAF_EDDSA_448_PRIVATE_BYTES,
+							b64_str2, sizeof(b64_str2))) {
+					ldns_buffer_printf(output, "PrivateKey: %s\n", b64_str2);
+				}
+# else
 				if(k->_key.key) {
                                         EC_KEY* ec = EVP_PKEY_get1_EC_KEY(k->_key.key);
                                         const BIGNUM* b = EC_KEY_get0_private_key(ec);
@@ -2210,6 +2221,7 @@ ldns_key2buffer_str(ldns_buffer *output, const ldns_key *k)
                                         EC_KEY_free(ec);
 				}
 				ldns_buffer_printf(output, "\n");
+# endif
 				break;
 #endif /* USE_ED448 */
 			case LDNS_SIGN_HMACMD5:

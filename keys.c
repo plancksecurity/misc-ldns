@@ -24,6 +24,7 @@
 #endif
 #ifdef HAVE_DECAF
 #include <decaf/ed255.h>
+#include <decaf/ed448.h>
 #endif
 
 ldns_lookup_table ldns_signing_algorithms[] = {
@@ -409,6 +410,27 @@ ldns_key_new_frm_fp_ed25519_l(FILE* fp, int* line_nr)
 #endif
 
 #ifdef USE_ED448
+# ifdef HAVE_DECAF
+static void *
+ldns_key_new_frm_fp_ed448_l(FILE* fp, int* line_nr)
+{
+	char token[16384];
+	unsigned char privkey[DECAF_EDDSA_448_PRIVATE_BYTES + 1], *key;
+	int r;
+
+	if (ldns_fget_keyword_data_l(fp, "PrivateKey", ": ", token, "\n",
+		sizeof(token), line_nr) == -1)
+		return NULL;
+	r = ldns_b64_pton(token, privkey, sizeof(privkey));
+	if (r != DECAF_EDDSA_448_PRIVATE_BYTES) {
+		return NULL;
+	}
+	if (!(key = LDNS_XMALLOC(unsigned char, DECAF_EDDSA_448_PRIVATE_BYTES)))
+		return NULL;
+	(void)memcpy(key, privkey, DECAF_EDDSA_448_PRIVATE_BYTES);
+	return key;
+}
+# else
 /** turn private key buffer into EC_KEY structure */
 static EC_KEY*
 ldns_ed448_priv_raw(uint8_t* pkey, int plen)
@@ -482,6 +504,7 @@ ldns_key_new_frm_fp_ed448_l(FILE* fp, int* line_nr)
 	}
 	return evp_key;
 }
+# endif
 #endif
 
 ldns_status
@@ -776,14 +799,20 @@ ldns_key_new_frm_fp_l(ldns_key **key, FILE *fp, int *line_nr)
 #ifdef USE_ED448
 		case LDNS_SIGN_ED448:
                         ldns_key_set_algorithm(k, alg);
+# if defined(HAVE_DECAF)
+                        ldns_key_set_external_key(k,
+                                ldns_key_new_frm_fp_ed448_l(fp, line_nr));
+# else
+
                         ldns_key_set_evp_key(k,
                                 ldns_key_new_frm_fp_ed448_l(fp, line_nr));
-#ifndef S_SPLINT_S
+#  ifndef S_SPLINT_S
 			if(!k->_key.key) {
 				ldns_key_free(k);
 				return LDNS_STATUS_ERR;
 			}
-#endif /* splint */
+#  endif /* splint */
+# endif
 			break;
 #endif
 		default:
@@ -1412,7 +1441,34 @@ ldns_key_new_frm_algorithm(ldns_signing_algorithm alg, uint16_t size)
 #endif /* ED25519 */
 #ifdef USE_ED448
 		case LDNS_SIGN_ED448:
-#ifdef HAVE_EVP_PKEY_KEYGEN
+# if defined(HAVE_DECAF)
+			k->_key.key = NULL;
+			ext_key = LDNS_XMALLOC(unsigned char,
+					DECAF_EDDSA_448_PRIVATE_BYTES);
+                        if(!ext_key) {
+				ldns_key_free(k);
+				return NULL;
+                        }
+#  ifdef HAVE_SSL
+			if (RAND_bytes(ext_key, DECAF_EDDSA_448_PRIVATE_BYTES) != 1) {
+				LDNS_FREE(ext_key);
+				ldns_key_free(k);
+				return NULL;
+			}
+#  else
+			while (offset + sizeof(i) < DECAF_EDDSA_448_PRIVATE_BYTES) {
+			  i = random();
+			  memcpy(&ext_key[offset], &i, sizeof(i));
+			  offset += sizeof(i);
+			}
+			if (offset < size) {
+			  i = random();
+			  memcpy(&ext_key[offset], &i, DECAF_EDDSA_448_PRIVATE_BYTES - offset);
+			}
+#  endif /* HAVE_SSL */
+			ldns_key_set_external_key(k, ext_key);
+# else /* HAVE_DECAF*/
+#  ifdef HAVE_EVP_PKEY_KEYGEN
 			ctx = EVP_PKEY_CTX_new_id(EVP_PKEY_EC, NULL);
 			if(!ctx) {
 				ldns_key_free(k);
@@ -1435,7 +1491,8 @@ ldns_key_new_frm_algorithm(ldns_signing_algorithm alg, uint16_t size)
 				return NULL;
 			}
 			EVP_PKEY_CTX_free(ctx);
-#endif
+#  endif
+# endif /* HAVE_DECAF */
 			break;
 #endif /* ED448 */
 	}
@@ -2105,6 +2162,16 @@ ldns_key2rr(const ldns_key *k)
                 case LDNS_SIGN_ED448:
 			ldns_rr_push_rdf(pubkey, ldns_native2rdf_int8(
 				LDNS_RDF_TYPE_ALG, ldns_key_algorithm(k)));
+# if defined(HAVE_DECAF)
+			bin = LDNS_XMALLOC(unsigned char,
+					DECAF_EDDSA_448_PRIVATE_BYTES);
+			size = DECAF_EDDSA_448_PRIVATE_BYTES;
+			if (!bin) {
+				ldns_rr_free(pubkey);
+				return NULL;
+			}
+			decaf_ed448_derive_public_key(bin, ldns_key_external_key(k));
+# else
                         bin = NULL;
                         ec = EVP_PKEY_get1_EC_KEY(k->_key.key);
                         EC_KEY_set_conv_form(ec, POINT_CONVERSION_UNCOMPRESSED);
@@ -2118,6 +2185,7 @@ ldns_key2rr(const ldns_key *k)
                          * to the pkey */
                         EC_KEY_free(ec);
 			internal_data = 1;
+# endif
 			break;
 #endif
 		case LDNS_SIGN_HMACMD5:

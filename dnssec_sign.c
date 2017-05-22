@@ -13,6 +13,7 @@
 #endif
 #ifdef HAVE_DECAF
 #include <decaf/ed255.h>
+#include <decaf/ed448.h>
 #endif
 
 #ifdef HAVE_SSL
@@ -136,6 +137,10 @@ ldns_sign_public_buffer(ldns_buffer *sign_buf, ldns_key *current_key)
 	uint8_t ed25519_sig[DECAF_EDDSA_25519_SIGNATURE_BYTES];
 # endif
 #endif
+#if defined(USE_ED448) && defined(HAVE_DECAF)
+	uint8_t ed448_pub[DECAF_EDDSA_448_PUBLIC_BYTES];
+	uint8_t ed448_sig[DECAF_EDDSA_448_SIGNATURE_BYTES];
+#endif
 
 	switch(ldns_key_algorithm(current_key)) {
 #ifdef USE_DSA
@@ -228,10 +233,24 @@ ldns_sign_public_buffer(ldns_buffer *sign_buf, ldns_key *current_key)
 #endif
 #ifdef USE_ED448
         case LDNS_SIGN_ED448:
+# if defined(HAVE_DECAF)
+		decaf_ed448_derive_public_key(ed448_pub,
+				ldns_key_external_key(current_key));
+		decaf_ed448_sign(ed448_sig,
+				ldns_key_external_key(current_key),
+				ed448_pub,
+				ldns_buffer_begin(sign_buf),
+				ldns_buffer_position(sign_buf),
+				0, NULL, 0);
+		b64rdf = ldns_rdf_new_frm_data(LDNS_RDF_TYPE_B64,
+				DECAF_EDDSA_448_SIGNATURE_BYTES,
+				ed448_sig);
+# else	
 		b64rdf = ldns_sign_public_evp(
 				   sign_buf,
 				   ldns_key_evp_key(current_key),
 				   EVP_sha512());
+# endif
                 break;
 #endif
 	case LDNS_SIGN_RSAMD5:
@@ -573,7 +592,7 @@ ldns_sign_public_evp(ldns_buffer *to_sign,
 				b64sig, siglen);
 		}
 #  endif /* USE_ED25519 */
-#  ifdef USE_ED448
+#  if defined(USE_ED448) && !defined(HAVE_DECAF)
 		if(EVP_PKEY_id(key) == NID_X448) {
 			r = 1;
 			sigdata_rdf = ldns_convert_ed448_rrsig_asn12rdf(

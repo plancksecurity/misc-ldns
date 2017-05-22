@@ -573,12 +573,11 @@ esac
 AC_ARG_ENABLE(ed448, AC_HELP_STRING([--enable-ed448], [Enable ED448 support (experimental)]))
 case "$enable_ed448" in
     yes)
-      if test "x$HAVE_SSL" != "xyes"; then
-        AC_MSG_ERROR([ED448 enabled, but no SSL support])
+      if test "x$USE_DECAF" != "xyes"; then
+        AC_MSG_ERROR([libdecaf is needed for ED448])
+      else
+        AC_CHECK_FUNCS([decaf_ed448_derive_public_key decaf_ed448_sign decaf_ed448_verify], [], [AC_MSG_ERROR([libdecaf does not support the ED488 curve: please upgrade libdecaf or rerun with --disable-ed448])])
       fi
-      AC_CHECK_DECLS([NID_X448], [], [AC_MSG_ERROR([OpenSSL does not support the EDDSA curve: please upgrade OpenSSL or rerun with --disable-ed448])], [AC_INCLUDES_DEFAULT
-#include <openssl/evp.h>
-      ])
       AC_DEFINE_UNQUOTED([USE_ED448], [1], [Define this to enable ED448 support.])
       ;;
     *|no) dnl default
