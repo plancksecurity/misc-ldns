@@ -2184,8 +2184,8 @@ ldns_key2rr(const ldns_key *k)
                         /* down the reference count for ec, its still assigned
                          * to the pkey */
                         EC_KEY_free(ec);
-			internal_data = 1;
 # endif
+			internal_data = 1;
 			break;
 #endif
 		case LDNS_SIGN_HMACMD5:
