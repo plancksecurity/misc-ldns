@@ -23,6 +23,8 @@
 #ifdef HAVE_SSL
 #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
 #include <openssl/bn.h>
+#include <openssl/rsa.h>
+#include <openssl/dsa.h>
 #endif /* TARGET_OS_IPHONE */
 #endif /* HAVE_SSL */
 
