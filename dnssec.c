@@ -17,13 +17,22 @@
 #include <strings.h>
 #include <time.h>
 
+#if __APPLE__
+#include <TargetConditionals.h>
+#endif
+
 #ifdef HAVE_SSL
 #include <openssl/ssl.h>
 #include <openssl/evp.h>
 #include <openssl/rand.h>
 #include <openssl/err.h>
 #include <openssl/md5.h>
-#endif
+
+#if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
+#include <openssl/dsa.h>
+#include <openssl/rsa.h>
+#endif /* TARGET_OS_IPHONE */
+#endif /* HAVE_SSL */
 
 ldns_rr *
 ldns_dnssec_get_rrsig_for_name_and_type(const ldns_rdf *name,
