@@ -16,6 +16,16 @@
 
 #include <limits.h>
 
+#if __APPLE__
+#include <TargetConditionals.h>
+#endif
+
+#ifdef HAVE_SSL
+#if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
+#include <openssl/bn.h>
+#endif /* TARGET_OS_IPHONE */
+#endif /* HAVE_SSL */
+
 #ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
 #endif
