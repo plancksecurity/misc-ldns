@@ -8,6 +8,10 @@
 #include <strings.h>
 #include <time.h>
 
+#if __APPLE__
+#include <TargetConditionals.h>
+#endif
+
 #ifdef HAVE_SSL
 /* this entire file is rather useless when you don't have
  * crypto...
@@ -17,6 +21,12 @@
 #include <openssl/rand.h>
 #include <openssl/err.h>
 #include <openssl/md5.h>
+
+#if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
+#include <openssl/dsa.h>
+#include <openssl/rsa.h>
+#endif /* TARGET_OS_IPHONE */
+
 #endif /* HAVE_SSL */
 
 ldns_rr *
