@@ -14,10 +14,22 @@
 
 #include <ldns/ldns.h>
 
+#if __APPLE__
+#include <TargetConditionals.h>
+#endif
+
 #ifdef HAVE_SSL
 #include <openssl/ssl.h>
 #include <openssl/engine.h>
 #include <openssl/rand.h>
+
+#if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
+#include <openssl/bn.h>
+#include <openssl/dsa.h>
+#include <openssl/rsa.h>
+#include <openssl/ui.h>
+#endif /* TARGET_OS_IPHONE */
+
 #endif /* HAVE_SSL */
 
 ldns_lookup_table ldns_signing_algorithms[] = {
