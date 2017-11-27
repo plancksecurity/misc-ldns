@@ -241,3 +241,5 @@
 /wire2host.o
 /zone.lo
 /zone.o
+
+.DS_Store
