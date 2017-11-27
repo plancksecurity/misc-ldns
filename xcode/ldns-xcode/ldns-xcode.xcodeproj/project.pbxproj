@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		438C79511FCBF2A300FA01F8 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 438C79501FCBF2A300FA01F8 /* libcrypto.a */; };
 		43FAD34D1FC6DCA20065600E /* duration.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD33F1FC6DCA10065600E /* duration.c */; };
 		43FAD34E1FC6DCA20065600E /* higher.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3401FC6DCA10065600E /* higher.c */; };
 		43FAD34F1FC6DCA20065600E /* error.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3411FC6DCA10065600E /* error.c */; };
@@ -79,6 +80,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		438C79501FCBF2A300FA01F8 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "../../../OpenSSL-for-iPhone/lib/libcrypto.a"; sourceTree = "<group>"; };
 		43FAD33F1FC6DCA10065600E /* duration.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = duration.c; path = ../../../duration.c; sourceTree = "<group>"; };
 		43FAD3401FC6DCA10065600E /* higher.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = higher.c; path = ../../../higher.c; sourceTree = "<group>"; };
 		43FAD3411FC6DCA10065600E /* error.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = error.c; path = ../../../error.c; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				438C79511FCBF2A300FA01F8 /* libcrypto.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -162,6 +165,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		438C794F1FCBF2A300FA01F8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				438C79501FCBF2A300FA01F8 /* libcrypto.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		43FAD33E1FC6DC240065600E /* src */ = {
 			isa = PBXGroup;
 			children = (
@@ -240,6 +251,7 @@
 				43FBB7651FC6D9630057A3BD /* ldns-xcode */,
 				43FBB7701FC6D9630057A3BD /* ldns-xcodeTests */,
 				43FBB7641FC6D9630057A3BD /* Products */,
+				438C794F1FCBF2A300FA01F8 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -584,6 +596,7 @@
 				INFOPLIST_FILE = "ldns-xcode/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../../OpenSSL-for-iPhone/lib";
 				PRODUCT_BUNDLE_IDENTIFIER = "net.pep-security.libs.ldns-xcode";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -608,6 +621,7 @@
 				INFOPLIST_FILE = "ldns-xcode/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../../OpenSSL-for-iPhone/lib";
 				PRODUCT_BUNDLE_IDENTIFIER = "net.pep-security.libs.ldns-xcode";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
