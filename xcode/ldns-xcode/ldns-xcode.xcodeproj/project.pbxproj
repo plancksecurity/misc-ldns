@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		438C79511FCBF2A300FA01F8 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 438C79501FCBF2A300FA01F8 /* libcrypto.a */; };
 		438C79531FCBF47200FA01F8 /* dname.c in Sources */ = {isa = PBXBuildFile; fileRef = 438C79521FCBF47200FA01F8 /* dname.c */; };
+		438C79551FCBF4CA00FA01F8 /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 438C79541FCBF4CA00FA01F8 /* util.c */; };
 		43FAD34D1FC6DCA20065600E /* duration.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD33F1FC6DCA10065600E /* duration.c */; };
 		43FAD34E1FC6DCA20065600E /* higher.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3401FC6DCA10065600E /* higher.c */; };
 		43FAD34F1FC6DCA20065600E /* error.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3411FC6DCA10065600E /* error.c */; };
@@ -83,6 +84,7 @@
 /* Begin PBXFileReference section */
 		438C79501FCBF2A300FA01F8 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "../../../OpenSSL-for-iPhone/lib/libcrypto.a"; sourceTree = "<group>"; };
 		438C79521FCBF47200FA01F8 /* dname.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dname.c; path = ../../../dname.c; sourceTree = "<group>"; };
+		438C79541FCBF4CA00FA01F8 /* util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = util.c; path = ../../../util.c; sourceTree = "<group>"; };
 		43FAD33F1FC6DCA10065600E /* duration.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = duration.c; path = ../../../duration.c; sourceTree = "<group>"; };
 		43FAD3401FC6DCA10065600E /* higher.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = higher.c; path = ../../../higher.c; sourceTree = "<group>"; };
 		43FAD3411FC6DCA10065600E /* error.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = error.c; path = ../../../error.c; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 		43FAD33E1FC6DC240065600E /* src */ = {
 			isa = PBXGroup;
 			children = (
+				438C79541FCBF4CA00FA01F8 /* util.c */,
 				438C79521FCBF47200FA01F8 /* dname.c */,
 				43FAD3421FC6DCA20065600E /* buffer.c */,
 				43FAD3471FC6DCA20065600E /* dane.c */,
@@ -427,6 +430,7 @@
 				43FAD34F1FC6DCA20065600E /* error.c in Sources */,
 				438C79531FCBF47200FA01F8 /* dname.c in Sources */,
 				43FAD3701FC6DCE70065600E /* parse.c in Sources */,
+				438C79551FCBF4CA00FA01F8 /* util.c in Sources */,
 				43FAD3571FC6DCA20065600E /* dnssec.c in Sources */,
 				43FAD36F1FC6DCE70065600E /* update.c in Sources */,
 				43FAD34E1FC6DCA20065600E /* higher.c in Sources */,
