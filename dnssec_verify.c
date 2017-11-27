@@ -15,6 +15,15 @@
 #include <openssl/err.h>
 #include <openssl/md5.h>
 
+#if __APPLE__
+#include <TargetConditionals.h>
+#endif
+
+#if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
+# define ERR_load_crypto_strings() \
+OPENSSL_init_crypto(OPENSSL_INIT_LOAD_CRYPTO_STRINGS, NULL)
+#endif /* TARGET_OS_IPHONE */
+
 ldns_dnssec_data_chain *
 ldns_dnssec_data_chain_new(void)
 {
