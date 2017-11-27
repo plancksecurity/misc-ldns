@@ -22,6 +22,14 @@
 #include <time.h>
 #include <ctype.h>
 
+#if __APPLE__
+#include <TargetConditionals.h>
+#endif
+
+#if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
+#include <resolv.h> // for b64_ntop/b64_pton
+#endif /* TARGET_OS_IPHONE */
+
 #ifdef HAVE_SSL
 #include <openssl/rand.h>
 #endif
@@ -465,9 +473,9 @@ ldns_bubblebabble(uint8_t *data, size_t len)
 /*
  * For backwards compatibility, because we have always exported this symbol.
  */
-#ifdef HAVE_B64_NTOP
+#if defined(HAVE_B64_NTOP) || (TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR)
 int ldns_b64_ntop(const uint8_t* src, size_t srclength,
-		char *target, size_t targsize);
+		char *target, size_t targsize)
 {
 	return b64_ntop(src, srclength, target, targsize);
 }
@@ -476,13 +484,12 @@ int ldns_b64_ntop(const uint8_t* src, size_t srclength,
 /*
  * For backwards compatibility, because we have always exported this symbol.
  */
-#ifdef HAVE_B64_PTON
+#if defined(HAVE_B64_PTON) || (TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR)
 int ldns_b64_pton(const char* src, uint8_t *target, size_t targsize)
 {
 	return b64_pton(src, target, targsize);
 }
 #endif
-
 
 static int
 ldns_b32_ntop_base(const uint8_t* src, size_t src_sz,
