@@ -338,6 +338,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 43FBB7771FC6D9640057A3BD /* Build configuration list for PBXNativeTarget "ldns-xcode" */;
 			buildPhases = (
+				438C795C1FCC14DF00FA01F8 /* Run Script */,
 				43FBB75E1FC6D9630057A3BD /* Sources */,
 				43FBB75F1FC6D9630057A3BD /* Frameworks */,
 				43FBB7601FC6D9630057A3BD /* Headers */,
@@ -423,6 +424,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		438C795C1FCC14DF00FA01F8 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "OPENSSL_DIR=$PROJECT_DIR/../../../OpenSSL-for-iPhone\necho OPENSSL_DIR $OPENSSL_DIR\nif [ ! -f $OPENSSL_DIR/lib/libcrypto.a ]; then\ncd $OPENSSL_DIR\n./build-libssl.sh --branch=1.1.0\nexit 0\nfi";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		43FBB75E1FC6D9630057A3BD /* Sources */ = {
