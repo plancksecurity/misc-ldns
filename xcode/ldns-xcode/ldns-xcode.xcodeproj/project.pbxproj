@@ -357,6 +357,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4344E4321FCC367600EEEA90 /* Build configuration list for PBXNativeTarget "ldns-xcode-config" */;
 			buildPhases = (
+				4328761C1FCEAB6D0036990F /* ShellScript */,
 				4344E4351FCC368A00EEEA90 /* ShellScript */,
 			);
 			buildRules = (
@@ -372,7 +373,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 43FBB7771FC6D9640057A3BD /* Build configuration list for PBXNativeTarget "ldns-xcode" */;
 			buildPhases = (
-				438C795C1FCC14DF00FA01F8 /* Run Script */,
 				43FBB75E1FC6D9630057A3BD /* Sources */,
 				43FBB75F1FC6D9630057A3BD /* Frameworks */,
 				43FBB7601FC6D9630057A3BD /* Headers */,
@@ -466,6 +466,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		4328761C1FCEAB6D0036990F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "OPENSSL_DIR=$PROJECT_DIR/../../../OpenSSL-for-iPhone\necho OPENSSL_DIR $OPENSSL_DIR\nif [ ! -f $OPENSSL_DIR/lib/libcrypto.a ]; then\ncd $OPENSSL_DIR\n./build-libssl.sh --branch=1.1.0\nexit 0\nfi";
+		};
 		4344E4351FCC368A00EEEA90 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -478,20 +491,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "PATH=$PATH:/opt/local/bin\nLDNS_BASE=$PROJECT_DIR/../..\nif [ ! -f $LDNS_BASE/ldns/config.h ]; then\ncd $LDNS_BASE\ngit submodule update --init\nglibtoolize -ci\nautoreconf -fi\nautoreconf -fi && ./configure --disable-dane --disable-dane-verify --disable-dane-ta-usage --with-ssl=$LDNS_BASE/../OpenSSL-for-iPhone/bin/iPhoneSimulator11.1-x86_64.sdk\nfi";
-		};
-		438C795C1FCC14DF00FA01F8 /* Run Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Run Script";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "OPENSSL_DIR=$PROJECT_DIR/../../../OpenSSL-for-iPhone\necho OPENSSL_DIR $OPENSSL_DIR\nif [ ! -f $OPENSSL_DIR/lib/libcrypto.a ]; then\ncd $OPENSSL_DIR\n./build-libssl.sh --branch=1.1.0\nexit 0\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
