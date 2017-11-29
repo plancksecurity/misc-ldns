@@ -490,7 +490,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "PATH=$PATH:/opt/local/bin\nLDNS_BASE=$PROJECT_DIR/../..\nif [ ! -f $LDNS_BASE/ldns/config.h ]; then\ncd $LDNS_BASE\ngit submodule update --init\nglibtoolize -ci\nautoreconf -fi\nautoreconf -fi && ./configure --disable-dane --disable-dane-verify --disable-dane-ta-usage --with-ssl=$LDNS_BASE/../OpenSSL-for-iPhone/bin/iPhoneSimulator11.1-x86_64.sdk\nfi";
+			shellScript = "PATH=$PATH:/opt/local/bin\nLDNS_BASE=$PROJECT_DIR/../..\nif [ ! -f $LDNS_BASE/ldns/config.h ]; then\ncd $LDNS_BASE\ngit submodule update --init\nglibtoolize -ci\nautoreconf -fi\nautoreconf -fi && ./configure --disable-dane --with-ssl=$LDNS_BASE/../OpenSSL-for-iPhone/bin/iPhoneSimulator11.1-x86_64.sdk\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
