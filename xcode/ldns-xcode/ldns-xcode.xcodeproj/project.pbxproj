@@ -90,6 +90,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4328761E1FCEBD8C0036990F /* configure.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = configure.sh; sourceTree = "<group>"; };
 		4344E42C1FCC367600EEEA90 /* ldns-xcode-config */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ldns-xcode-config"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4344E42E1FCC367600EEEA90 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		438C79501FCBF2A300FA01F8 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "../../../OpenSSL-for-iPhone/lib/libcrypto.a"; sourceTree = "<group>"; };
@@ -181,6 +182,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4328761D1FCEBD770036990F /* scripts */ = {
+			isa = PBXGroup;
+			children = (
+				4328761E1FCEBD8C0036990F /* configure.sh */,
+			);
+			path = scripts;
+			sourceTree = "<group>";
+		};
 		4344E42D1FCC367600EEEA90 /* ldns-xcode-config */ = {
 			isa = PBXGroup;
 			children = (
@@ -275,6 +284,7 @@
 			children = (
 				43FAD3771FC6DCFE0065600E /* include */,
 				43FAD33E1FC6DC240065600E /* src */,
+				4328761D1FCEBD770036990F /* scripts */,
 				43FBB7651FC6D9630057A3BD /* ldns-xcode */,
 				43FBB7701FC6D9630057A3BD /* ldns-xcodeTests */,
 				4344E42D1FCC367600EEEA90 /* ldns-xcode-config */,
@@ -358,7 +368,6 @@
 			buildConfigurationList = 4344E4321FCC367600EEEA90 /* Build configuration list for PBXNativeTarget "ldns-xcode-config" */;
 			buildPhases = (
 				4328761C1FCEAB6D0036990F /* ShellScript */,
-				4344E4351FCC368A00EEEA90 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -478,19 +487,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "OPENSSL_DIR=$PROJECT_DIR/../../../OpenSSL-for-iPhone\necho OPENSSL_DIR $OPENSSL_DIR\nif [ ! -f $OPENSSL_DIR/lib/libcrypto.a ]; then\ncd $OPENSSL_DIR\n./build-libssl.sh --branch=1.1.0\nexit 0\nfi";
-		};
-		4344E4351FCC368A00EEEA90 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "PATH=$PATH:/opt/local/bin\nLDNS_BASE=$PROJECT_DIR/../..\nif [ ! -f $LDNS_BASE/ldns/config.h ]; then\ncd $LDNS_BASE\ngit submodule update --init\nglibtoolize -ci\nautoreconf -fi\nautoreconf -fi && ./configure --disable-dane --with-ssl=$LDNS_BASE/../OpenSSL-for-iPhone/bin/iPhoneSimulator11.1-x86_64.sdk\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -703,6 +699,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../",
 					"$(SRCROOT)/../../../OpenSSL-for-iPhone/include",
+					"$(SRCROOT)",
 				);
 				INFOPLIST_FILE = "ldns-xcode/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -729,6 +726,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../",
 					"$(SRCROOT)/../../../OpenSSL-for-iPhone/include",
+					"$(SRCROOT)",
 				);
 				INFOPLIST_FILE = "ldns-xcode/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
