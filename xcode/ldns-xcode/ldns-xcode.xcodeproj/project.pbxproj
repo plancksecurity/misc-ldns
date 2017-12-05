@@ -242,7 +242,7 @@
 				43FAD3661FC6DCE70065600E /* zone.c */,
 			);
 			path = src;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 		43FAD3771FC6DCFE0065600E /* include */ = {
 			isa = PBXGroup;
@@ -277,7 +277,7 @@
 				43FAD3801FC6DD7E0065600E /* zone.h */,
 			);
 			path = include;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 		43FBB7591FC6D9630057A3BD = {
 			isa = PBXGroup;
