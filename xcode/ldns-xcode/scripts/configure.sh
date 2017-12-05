@@ -30,15 +30,13 @@
 
 LDNS_BASE=$PROJECT_DIR/../..
 
-# Make sure the last part is correct, relative to $LDNS_BASE
-SDK=../OpenSSL-for-iPhone/bin/iPhoneSimulator11.1-x86_64.sdk
+sdks=( ../OpenSSL-for-iPhone/bin/iPhoneSimulator*-x86_64.sdk )
+SDK="${sdks[${#sdks[@]}-1]}"
+echo Using OpenSSL at $SDK
 
 pushd $LDNS_BASE
 git submodule update --init
 glibtoolize -ci
 autoreconf -fi
-autoreconf -fi
 ./configure --disable-dane --disable-dane-verify --disable-dane-ta-usage --with-ssl=$SDK
 popd
-mkdir -p $PROJECT_DIR/ldns
-mv $LDNS_BASE/ldns/config.h $PROJECT_DIR/ldns
