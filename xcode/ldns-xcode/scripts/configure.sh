@@ -30,6 +30,10 @@ PATH=$PATH:/opt/local/bin
 
 LDNS_BASE=$PROJECT_DIR/../..
 
+if [ -f $LDNS_BASE/ldns/config.h ]; then
+exit 0
+fi
+
 sdks=( ../OpenSSL-for-iPhone/bin/iPhoneSimulator*-x86_64.sdk )
 SDK="${sdks[${#sdks[@]}-1]}"
 echo Using OpenSSL at $SDK
