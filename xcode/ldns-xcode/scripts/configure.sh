@@ -26,7 +26,7 @@
 #
 
 # macports must be in PATH
-#PATH=$PATH:/opt/local/bin
+PATH=$PATH:/opt/local/bin
 
 LDNS_BASE=$PROJECT_DIR/../..
 
