@@ -15,6 +15,17 @@
 #include <ldns/ldns.h>
 #include <strings.h>
 
+#if __APPLE__
+#include "TargetConditionals.h"
+#endif
+
+#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+
+#include <resolv.h>
+#include <netdb.h>
+
+#endif
+
 /* Access function for reading
  * and setting the different Resolver
  * options */
@@ -997,10 +1008,69 @@ ldns_resolver_new_frm_fp_l(ldns_resolver **res, FILE *fp, int *line_nr)
 	}
 }
 
+#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+
+ldns_status
+ldns_resolver_new_iOS(ldns_resolver **res)
+{
+    res_state the_res_state = malloc(sizeof(struct __res_state));
+    int result = res_ninit(the_res_state);
+    if (result == 0) {
+        union res_sockaddr_union servers[NI_MAXSERV];
+        int serversFound = res_getservers(the_res_state, servers, NI_MAXSERV);
+
+        ldns_resolver *the_resolver = ldns_resolver_new();
+        uint16_t default_port = ldns_resolver_port(the_resolver);
+
+        for (int i = 0; i < serversFound; i ++) {
+            union res_sockaddr_union s = servers[i];
+
+            uint16_t port;
+            ldns_rdf *rdf = ldns_sockaddr_storage2rdf(&s.sin, &port);
+
+            if (rdf) {
+                uint16_t existing_port = ldns_resolver_port(the_resolver);
+                if (port != existing_port && existing_port != default_port) {
+                    // have different servers with different ports, stop here
+                    free(the_res_state);
+                    *res = the_resolver;
+                    return LDNS_STATUS_OK;
+                }
+
+                ldns_status status = ldns_resolver_push_nameserver(the_resolver, rdf);
+                ldns_rdf_free(rdf);
+                if (status != LDNS_STATUS_OK) {
+                    free(the_res_state);
+                    ldns_resolver_free(the_resolver);
+                    return status;
+                } else {
+                    ldns_resolver_set_port(the_resolver, port);
+                }
+            } else {
+                free(the_res_state);
+                ldns_resolver_free(the_resolver);
+                return LDNS_STATUS_ERR;
+            }
+        }
+
+        free(the_res_state);
+        *res = the_resolver;
+        return LDNS_STATUS_OK;
+    }
+
+    free(the_res_state);
+    return LDNS_STATUS_ERR;
+}
+
+#endif
+
 ldns_status
 ldns_resolver_new_frm_file(ldns_resolver **res, const char *filename)
 {
-	ldns_resolver *r;
+#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+    return ldns_resolver_new_iOS(res);
+#else
+    ldns_resolver *r;
 	FILE *fp;
 	ldns_status s;
 
@@ -1026,6 +1096,7 @@ ldns_resolver_new_frm_file(ldns_resolver **res, const char *filename)
 		}
 	}
 	return s;
+#endif
 }
 
 void
