@@ -8,37 +8,37 @@
 
 /* Begin PBXBuildFile section */
 		438C79511FCBF2A300FA01F8 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 438C79501FCBF2A300FA01F8 /* libcrypto.a */; };
-		438C79531FCBF47200FA01F8 /* dname.c in Sources */ = {isa = PBXBuildFile; fileRef = 438C79521FCBF47200FA01F8 /* dname.c */; };
-		438C79551FCBF4CA00FA01F8 /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 438C79541FCBF4CA00FA01F8 /* util.c */; };
+		438C79531FCBF47200FA01F8 /* dname.c in Sources */ = {isa = PBXBuildFile; fileRef = 438C79521FCBF47200FA01F8 /* dname.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		438C79551FCBF4CA00FA01F8 /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 438C79541FCBF4CA00FA01F8 /* util.c */; settings = {COMPILER_FLAGS = "-w"; }; };
 		438C79571FCC143300FA01F8 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 438C79561FCC143300FA01F8 /* libresolv.tbd */; };
-		43FAD34D1FC6DCA20065600E /* duration.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD33F1FC6DCA10065600E /* duration.c */; };
-		43FAD34E1FC6DCA20065600E /* higher.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3401FC6DCA10065600E /* higher.c */; };
-		43FAD34F1FC6DCA20065600E /* error.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3411FC6DCA10065600E /* error.c */; };
-		43FAD3501FC6DCA20065600E /* buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3421FC6DCA20065600E /* buffer.c */; };
-		43FAD3511FC6DCA20065600E /* net.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3431FC6DCA20065600E /* net.c */; };
-		43FAD3521FC6DCA20065600E /* packet.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3441FC6DCA20065600E /* packet.c */; };
-		43FAD3531FC6DCA20065600E /* dnssec_verify.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3451FC6DCA20065600E /* dnssec_verify.c */; };
-		43FAD3541FC6DCA20065600E /* dnssec_sign.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3461FC6DCA20065600E /* dnssec_sign.c */; };
-		43FAD3551FC6DCA20065600E /* dane.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3471FC6DCA20065600E /* dane.c */; };
-		43FAD3561FC6DCA20065600E /* dnssec_zone.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3481FC6DCA20065600E /* dnssec_zone.c */; };
-		43FAD3571FC6DCA20065600E /* dnssec.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3491FC6DCA20065600E /* dnssec.c */; };
-		43FAD3581FC6DCA20065600E /* host2str.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD34A1FC6DCA20065600E /* host2str.c */; };
-		43FAD3591FC6DCA20065600E /* host2wire.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD34B1FC6DCA20065600E /* host2wire.c */; };
-		43FAD35A1FC6DCA20065600E /* keys.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD34C1FC6DCA20065600E /* keys.c */; };
-		43FAD3691FC6DCE70065600E /* sha2.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD35B1FC6DCE50065600E /* sha2.c */; };
-		43FAD36A1FC6DCE70065600E /* rr_functions.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD35C1FC6DCE60065600E /* rr_functions.c */; };
-		43FAD36B1FC6DCE70065600E /* wire2host.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD35D1FC6DCE60065600E /* wire2host.c */; };
-		43FAD36C1FC6DCE70065600E /* str2host.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD35E1FC6DCE60065600E /* str2host.c */; };
-		43FAD36D1FC6DCE70065600E /* radix.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD35F1FC6DCE60065600E /* radix.c */; };
-		43FAD36E1FC6DCE70065600E /* resolver.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3601FC6DCE60065600E /* resolver.c */; };
-		43FAD36F1FC6DCE70065600E /* update.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3611FC6DCE60065600E /* update.c */; };
-		43FAD3701FC6DCE70065600E /* parse.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3621FC6DCE60065600E /* parse.c */; };
-		43FAD3711FC6DCE70065600E /* tsig.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3631FC6DCE60065600E /* tsig.c */; };
-		43FAD3721FC6DCE70065600E /* rbtree.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3641FC6DCE60065600E /* rbtree.c */; };
-		43FAD3731FC6DCE70065600E /* rdata.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3651FC6DCE60065600E /* rdata.c */; };
-		43FAD3741FC6DCE70065600E /* zone.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3661FC6DCE70065600E /* zone.c */; };
-		43FAD3751FC6DCE70065600E /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3671FC6DCE70065600E /* sha1.c */; };
-		43FAD3761FC6DCE70065600E /* rr.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3681FC6DCE70065600E /* rr.c */; };
+		43FAD34D1FC6DCA20065600E /* duration.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD33F1FC6DCA10065600E /* duration.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD34E1FC6DCA20065600E /* higher.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3401FC6DCA10065600E /* higher.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD34F1FC6DCA20065600E /* error.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3411FC6DCA10065600E /* error.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD3501FC6DCA20065600E /* buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3421FC6DCA20065600E /* buffer.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD3511FC6DCA20065600E /* net.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3431FC6DCA20065600E /* net.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD3521FC6DCA20065600E /* packet.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3441FC6DCA20065600E /* packet.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD3531FC6DCA20065600E /* dnssec_verify.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3451FC6DCA20065600E /* dnssec_verify.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD3541FC6DCA20065600E /* dnssec_sign.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3461FC6DCA20065600E /* dnssec_sign.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD3551FC6DCA20065600E /* dane.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3471FC6DCA20065600E /* dane.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD3561FC6DCA20065600E /* dnssec_zone.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3481FC6DCA20065600E /* dnssec_zone.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD3571FC6DCA20065600E /* dnssec.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3491FC6DCA20065600E /* dnssec.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD3581FC6DCA20065600E /* host2str.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD34A1FC6DCA20065600E /* host2str.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD3591FC6DCA20065600E /* host2wire.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD34B1FC6DCA20065600E /* host2wire.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD35A1FC6DCA20065600E /* keys.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD34C1FC6DCA20065600E /* keys.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD3691FC6DCE70065600E /* sha2.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD35B1FC6DCE50065600E /* sha2.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD36A1FC6DCE70065600E /* rr_functions.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD35C1FC6DCE60065600E /* rr_functions.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD36B1FC6DCE70065600E /* wire2host.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD35D1FC6DCE60065600E /* wire2host.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD36C1FC6DCE70065600E /* str2host.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD35E1FC6DCE60065600E /* str2host.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD36D1FC6DCE70065600E /* radix.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD35F1FC6DCE60065600E /* radix.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD36E1FC6DCE70065600E /* resolver.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3601FC6DCE60065600E /* resolver.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD36F1FC6DCE70065600E /* update.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3611FC6DCE60065600E /* update.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD3701FC6DCE70065600E /* parse.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3621FC6DCE60065600E /* parse.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD3711FC6DCE70065600E /* tsig.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3631FC6DCE60065600E /* tsig.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD3721FC6DCE70065600E /* rbtree.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3641FC6DCE60065600E /* rbtree.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD3731FC6DCE70065600E /* rdata.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3651FC6DCE60065600E /* rdata.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD3741FC6DCE70065600E /* zone.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3661FC6DCE70065600E /* zone.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD3751FC6DCE70065600E /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3671FC6DCE70065600E /* sha1.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		43FAD3761FC6DCE70065600E /* rr.c in Sources */ = {isa = PBXBuildFile; fileRef = 43FAD3681FC6DCE70065600E /* rr.c */; settings = {COMPILER_FLAGS = "-w"; }; };
 		43FAD3941FC6DD7F0065600E /* rr_functions.h in Headers */ = {isa = PBXBuildFile; fileRef = 43FAD3781FC6DD7D0065600E /* rr_functions.h */; };
 		43FAD3951FC6DD7F0065600E /* parse.h in Headers */ = {isa = PBXBuildFile; fileRef = 43FAD3791FC6DD7D0065600E /* parse.h */; };
 		43FAD3961FC6DD7F0065600E /* host2str.h in Headers */ = {isa = PBXBuildFile; fileRef = 43FAD37A1FC6DD7D0065600E /* host2str.h */; };
@@ -445,6 +445,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 43FBB7591FC6D9630057A3BD;
 			productRefGroup = 43FBB7641FC6D9630057A3BD /* Products */;
@@ -606,7 +607,7 @@
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
@@ -645,7 +646,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				VALID_ARCHS = "arm64 armv7s armv7";
+				VALID_ARCHS = "$(inherited)";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -667,7 +668,7 @@
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
@@ -700,7 +701,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "arm64 armv7s armv7";
+				VALID_ARCHS = "$(inherited)";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
