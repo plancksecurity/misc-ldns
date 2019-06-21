@@ -488,7 +488,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "OPENSSL_DIR=$PROJECT_DIR/../../../OpenSSL-for-iPhone\necho OPENSSL_DIR $OPENSSL_DIR\nif [ ! -f $OPENSSL_DIR/lib/libcrypto.a ]; then\ncd $OPENSSL_DIR\n./build-libssl.sh --branch=1.1.0 --targets=\"ios-sim-cross-x86_64 ios-sim-cross-i386 ios64-cross-arm64 ios-cross-armv7 ios-cross-armv7s\"\nexit 0\nfi";
+			shellScript = "OPENSSL_DIR=$PROJECT_DIR/../../../OpenSSL-for-iPhone\necho OPENSSL_DIR $OPENSSL_DIR\nif [ ! -f $OPENSSL_DIR/lib/libcrypto.a ]; then\ncd $OPENSSL_DIR\n./build-libssl.sh --branch=1.1.0 --targets=\"ios-sim-cross-x86_64 ios-sim-cross-i386 ios64-cross-arm64 ios-cross-armv7 ios-cross-armv7s\"\nexit 0\nfi\n";
 		};
 		43C6684D1FD6AF8200A5171B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -501,7 +501,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "sh $PROJECT_DIR/scripts/configure.sh";
+			shellScript = "sh $PROJECT_DIR/scripts/configure.sh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -638,6 +638,7 @@
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
@@ -693,6 +694,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
@@ -724,7 +726,7 @@
 				);
 				INFOPLIST_FILE = "ldns-xcode/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = "$(inherited)";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../../OpenSSL-for-iPhone/lib";
 				PRODUCT_BUNDLE_IDENTIFIER = "net.pep-security.libs.ldns-xcode";
@@ -751,7 +753,7 @@
 				);
 				INFOPLIST_FILE = "ldns-xcode/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = "$(inherited)";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../../OpenSSL-for-iPhone/lib";
 				PRODUCT_BUNDLE_IDENTIFIER = "net.pep-security.libs.ldns-xcode";
