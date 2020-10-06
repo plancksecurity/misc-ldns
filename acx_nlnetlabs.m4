@@ -727,8 +727,9 @@ AC_DEFUN([ACX_SSL_CHECKS], [
                                 [If you have HMAC_Update])
                             AC_MSG_RESULT(yes) 
                           ],[
-                            AC_MSG_RESULT(no)
-                            AC_MSG_ERROR([OpenSSL found in $ssldir, but version 0.9.7 or higher is required])
+                            AC_DEFINE([HAVE_HMAC_UPDATE], 1, 
+                                [If you have HMAC_Update])
+                            AC_MSG_RESULT(yes) 
 			])
                     ])
                 ])
