@@ -16,7 +16,6 @@
 /compat/timegm.o
 /compat/timegm.lo
 /config.guess
-/config.h
 /config.log
 /config.status
 /config.sub
@@ -151,7 +150,6 @@
 /keys.lo
 /keys.o
 /ldns/common.h
-/ldns/config.h
 /ldns/config.h.in
 /ldns/config.h.in~
 /ldns/net.h
