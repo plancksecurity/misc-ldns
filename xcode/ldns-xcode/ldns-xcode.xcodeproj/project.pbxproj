@@ -72,6 +72,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		4344E4331FCC367F00EEEA90 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 43FBB75A1FC6D9630057A3BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4344E42B1FCC367600EEEA90;
+			remoteInfo = "ldns-xcode-config";
+		};
 		43FBB76E1FC6D9630057A3BD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 43FBB75A1FC6D9630057A3BD /* Project object */;
@@ -140,6 +147,7 @@
 		432027BE252C75A300986C44 /* update.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = update.c; path = ../../update.c; sourceTree = "<group>"; };
 		432027DE252C75BC00986C44 /* buffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = buffer.c; path = ../../buffer.c; sourceTree = "<group>"; };
 		4328761E1FCEBD8C0036990F /* configure.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = configure.sh; sourceTree = "<group>"; };
+		4344E42C1FCC367600EEEA90 /* ldns-xcode-config */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ldns-xcode-config"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4344E42E1FCC367600EEEA90 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		438C79501FCBF2A300FA01F8 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "../../../OpenSSL-for-iPhone/lib/libcrypto.a"; sourceTree = "<group>"; };
 		438C79561FCC143300FA01F8 /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
@@ -287,6 +295,7 @@
 			children = (
 				43FBB7631FC6D9630057A3BD /* ldns_xcode.framework */,
 				43FBB76C1FC6D9630057A3BD /* ldns-xcodeTests.xctest */,
+				4344E42C1FCC367600EEEA90 /* ldns-xcode-config */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -350,6 +359,22 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		4344E42B1FCC367600EEEA90 /* ldns-xcode-config */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4344E4321FCC367600EEEA90 /* Build configuration list for PBXNativeTarget "ldns-xcode-config" */;
+			buildPhases = (
+				4328761C1FCEAB6D0036990F /* ShellScript */,
+				43C6684D1FD6AF8200A5171B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "ldns-xcode-config";
+			productName = "ldns-xcode-config";
+			productReference = 4344E42C1FCC367600EEEA90 /* ldns-xcode-config */;
+			productType = "com.apple.product-type.tool";
+		};
 		43FBB7621FC6D9630057A3BD /* ldns-xcode */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 43FBB7771FC6D9640057A3BD /* Build configuration list for PBXNativeTarget "ldns-xcode" */;
@@ -362,6 +387,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				4344E4341FCC367F00EEEA90 /* PBXTargetDependency */,
 			);
 			name = "ldns-xcode";
 			productName = "ldns-xcode";
@@ -395,6 +421,10 @@
 				LastUpgradeCheck = 1110;
 				ORGANIZATIONNAME = "pEp Security S.A.";
 				TargetAttributes = {
+					4344E42B1FCC367600EEEA90 = {
+						CreatedOnToolsVersion = 9.1;
+						ProvisioningStyle = Automatic;
+					};
 					43FBB7621FC6D9630057A3BD = {
 						CreatedOnToolsVersion = 9.1;
 						ProvisioningStyle = Automatic;
@@ -420,6 +450,7 @@
 			targets = (
 				43FBB7621FC6D9630057A3BD /* ldns-xcode */,
 				43FBB76B1FC6D9630057A3BD /* ldns-xcodeTests */,
+				4344E42B1FCC367600EEEA90 /* ldns-xcode-config */,
 			);
 		};
 /* End PBXProject section */
@@ -440,6 +471,35 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4328761C1FCEAB6D0036990F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "OPENSSL_DIR=$PROJECT_DIR/../../../OpenSSL-for-iPhone\necho OPENSSL_DIR $OPENSSL_DIR\nif [ ! -f $OPENSSL_DIR/lib/libcrypto.a ]; then\ncd $OPENSSL_DIR\n./build-libssl.sh --version=1.1.1 --targets=\"ios-sim-cross-x86_64 ios-sim-cross-i386 ios64-cross-arm64 ios-cross-armv7 ios-cross-armv7s\"\nexit 0\nfi\n";
+		};
+		43C6684D1FD6AF8200A5171B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh $PROJECT_DIR/scripts/configure.sh\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		43FBB75E1FC6D9630057A3BD /* Sources */ = {
@@ -490,6 +550,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		4344E4341FCC367F00EEEA90 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4344E42B1FCC367600EEEA90 /* ldns-xcode-config */;
+			targetProxy = 4344E4331FCC367F00EEEA90 /* PBXContainerItemProxy */;
+		};
 		43FBB76F1FC6D9630057A3BD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 43FBB7621FC6D9630057A3BD /* ldns-xcode */;
@@ -498,6 +563,32 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		4344E4301FCC367600EEEA90 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = NQLYU6MGPN;
+				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		4344E4311FCC367600EEEA90 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = NQLYU6MGPN;
+				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 		43FBB7751FC6D9640057A3BD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -699,6 +790,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4344E4321FCC367600EEEA90 /* Build configuration list for PBXNativeTarget "ldns-xcode-config" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4344E4301FCC367600EEEA90 /* Debug */,
+				4344E4311FCC367600EEEA90 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		43FBB75D1FC6D9630057A3BD /* Build configuration list for PBXProject "ldns-xcode" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
