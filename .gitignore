@@ -152,7 +152,6 @@
 /ldns/config.h.in
 /ldns/config.h.in~
 /ldns/net.h
-/ldns/util.h
 /ldns_wrapper.lo
 /ldns_wrapper.o
 /lib
