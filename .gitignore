@@ -148,7 +148,6 @@
 /install-sh
 /keys.lo
 /keys.o
-/ldns/common.h
 /ldns/config.h.in
 /ldns/config.h.in~
 /ldns/net.h
