@@ -346,10 +346,10 @@ case "$enable_sha2" in
         if test "x$HAVE_SSL" != "xyes"; then
             AC_MSG_ERROR([SHA2 enabled, but no SSL support])
         fi
-	AC_MSG_CHECKING(for SHA256 and SHA512)
-	AC_CHECK_FUNC(SHA256_Init, [], [
-		AC_MSG_ERROR([No SHA2 functions found in OpenSSL: please upgrade OpenSSL or rerun with --disable-sha2])
-		])
+	#AC_MSG_CHECKING(for SHA256 and SHA512)
+	#AC_CHECK_FUNC(SHA256_Init, [], [
+		#AC_MSG_ERROR([No SHA2 functions found in OpenSSL: please upgrade OpenSSL or rerun with --disable-sha2])
+		#])
 	AC_DEFINE_UNQUOTED([USE_SHA2], [1], [Define this to enable SHA256 and SHA512 support.])
         ;;
 esac
