@@ -483,7 +483,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "OPENSSL_DIR=$PROJECT_DIR/../../../OpenSSL-for-iPhone\necho OPENSSL_DIR $OPENSSL_DIR\nif [ ! -f $OPENSSL_DIR/lib/libcrypto.a ]; then\ncd $OPENSSL_DIR\n./build-libssl.sh --version=1.1.1 --targets=\"ios-sim-cross-x86_64 ios-sim-cross-i386 ios64-cross-arm64 ios-cross-armv7 ios-cross-armv7s\"\nexit 0\nfi\n";
+			shellScript = "OPENSSL_DIR=$PROJECT_DIR/../../../OpenSSL-for-iPhone\necho OPENSSL_DIR $OPENSSL_DIR\nif [ ! -f $OPENSSL_DIR/lib/libcrypto.a ]; then\ncd $OPENSSL_DIR\n./build-libssl.sh --version=1.1.1 --targets=\"ios-sim-cross-x86_64 ios64-cross-arm64\"\nexit 0\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
